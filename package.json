@@ -1,12 +1,24 @@
 {
+  "type": "module",
   "name": "prg6",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "roel",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roel-H/prg6.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Roel-H/prg6/issues"
+  },
+  "homepage": "https://github.com/Roel-H/prg6#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
