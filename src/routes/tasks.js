@@ -3,6 +3,8 @@ import Task from '../models/task.js';
 
 const router = express.Router();
 
+router.use(express.urlencoded({ extended: true }));
+
 // Middleware to check the Accept header for all GET requests
 const checkAcceptHeader = (req, res, next) => {
     if (req.method === 'GET' && (!req.headers.accept || req.headers.accept !== 'application/json')) {
@@ -30,19 +32,40 @@ router.use(checkContentTypeHeader);
 
 router.get("/", async (req, res) => {
     try {
+        // Retrieve all tasks from the MongoDB database
         const tasks = await Task.find();
-        const simplifiedTasks = tasks.map(task => ({ name: task.name, status: task.status, id: task.id }));
+
+        // Simplify tasks and add HATEOAS links
         const halResponse = {
-            items: simplifiedTasks,
+            items: tasks.map(task => ({
+                id: task.id,
+                title: task.name,
+                status: task.status,
+                _links: {
+                    self: { href: `/tasks/${task.id}` },
+                    collection: { href: "/tasks" },
+                },
+            })),
             _links: {
                 self: { href: "/tasks" },
             },
             pagination: {
-                temp: "Pagination info goes here",
+                currentPage: 1,
+                currentItems: tasks.length,
+                totalPages: 1,
+                totalItems: tasks.length,
+                _links: {
+                    first: { page: 1, href: "/tasks" },
+                    last: { page: 1, href: "/tasks" },
+                    previous: { page: 1, href: "/tasks" },
+                    next: { page: 1, href: "/tasks" },
+                },
             },
         };
+
         res.json(halResponse);
     } catch (error) {
+        // Handle errors and respond with a 500 Internal Server Error
         res.status(500).json({ error: error.message });
     }
 });
