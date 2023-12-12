@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
 
         // Use the createPagination function
         const halResponse = createPagination(total, start, limit);
-
+        console.log("Pagination received")
         // Add the items to the halResponse
         halResponse.items = tasks.slice(start - 1, start - 1 + limit).map(task => ({
             id: task.id,
@@ -55,14 +55,15 @@ router.get("/", async (req, res) => {
                 collection: {href: "/tasks"},
             },
         }));
+        console.log("halResponse done")
 
         // Send the halResponse
         res.json(halResponse);
     } catch (error) {
         res.status(500).json({error: error.message});
     }
+    console.log("Complete Get")
 });
-
 
 router.post("/", async (req, res) => {
     console.log("Start /Post")
