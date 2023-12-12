@@ -83,7 +83,7 @@ export const createPagination = (total, start, limit) => {
         items: [],
         _links: {
             self: {
-                href: `http://145.24.222.190:8000/tasks?start=${start}&limit=${limit}`,
+                href: `http://145.24.222.190:8000/tasks`,
             },
         },
         pagination: {
