@@ -8,6 +8,7 @@ router.use(express.urlencoded({extended: true}));
 
 // Middleware to check the Accept header for all GET requests
 const checkAcceptHeader = (req, res, next) => {
+    console.log("Start checkAcceptHeader")
     if (req.method === 'GET' && (!req.headers.accept || req.headers.accept !== 'application/json')) {
         // Respond with 406 Not Acceptable if the Accept header is missing or not application/json
         return res.status(406).json({error: "Only application/json is allowed in the Accept header for GET requests"});
@@ -20,6 +21,7 @@ router.use(checkAcceptHeader);
 
 // Middleware to check the Content-Type header for all POST requests
 const checkContentTypeHeader = (req, res, next) => {
+    console.log("Start checkContentTypeHeader")
     if (req.method === 'POST' && (!req.headers['content-type'] ||
         !['application/json', 'application/x-www-form-urlencoded'].includes(req.headers['content-type']))) {
         // Respond with 415 Unsupported Media Type if the Content-Type header is missing or not allowed
@@ -32,6 +34,7 @@ const checkContentTypeHeader = (req, res, next) => {
 router.use(checkContentTypeHeader);
 
 router.get("/", async (req, res) => {
+    console.log("Start /Get")
     try {
         const tasks = await Task.find();
 
@@ -62,6 +65,7 @@ router.get("/", async (req, res) => {
 
 
 router.post("/", async (req, res) => {
+    console.log("Start /Post")
     const {name, description, status} = req.body;
 
     try {
@@ -74,11 +78,13 @@ router.post("/", async (req, res) => {
 });
 
 router.options("/", (req, res) => {
+    console.log("Start /Options")
     res.header("Allow", "GET, POST, OPTIONS");
     res.status(200).send();
 });
 
 router.get("/:id", async (req, res) => {
+    console.log("Start /id/Get")
     const id = req.params.id;
 
     try {
@@ -96,6 +102,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+    console.log("Start /id/Put")
     const id = req.params.id;
     const {name, description, status} = req.body;
 
@@ -118,6 +125,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+    console.log("Start /id/Delete")
     const id = req.params.id;
 
     try {
@@ -135,6 +143,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.options("/:id", (req, res) => {
+    console.log("Start /id/options")
     res.header("Allow", "GET, PUT, DELETE, OPTIONS");
     res.status(200).send();
 });

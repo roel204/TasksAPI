@@ -67,15 +67,16 @@ const getNextQueryString = (total, start, limit) => {
 };
 
 // Calculates what pagenumber belongs to itemNumber.
-export const itemToPageNumber = (total, start, limit, itemNumber) => {
-    if (isNaN(start) || isNaN(limit) || itemNumber < start || itemNumber > start + limit - 1) {
-        return 1;
-    }
-    return Math.ceil(itemNumber / limit);
-};
+// export const itemToPageNumber = (total, start, limit, itemNumber) => {
+//     if (isNaN(start) || isNaN(limit) || itemNumber < start || itemNumber > start + limit - 1) {
+//         return 1;
+//     }
+//     return Math.ceil(itemNumber / limit);
+// };
 
 // Create pagination object
 export const createPagination = (total, start, limit) => {
+    console.log("Start createPagination")
     const currentPageNum = currentPage(total, start, limit);
 
     return {

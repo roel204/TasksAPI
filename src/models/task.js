@@ -7,6 +7,7 @@ const taskSchema = new Schema({
     status: { type: String, required: true },
 });
 
+console.log("Export Task")
 const Task = mongoose.model('Task', taskSchema);
 
 export default Task;

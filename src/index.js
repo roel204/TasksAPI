@@ -4,7 +4,9 @@ import 'dotenv/config';
 import tasksRouter from './routes/tasks.js';
 
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/taskmanager');
+mongoose.connect('mongodb://127.0.0.1:27017/taskmanager')
+    .then(() => console.log("Database Connected"))
+    .catch(err => console.log(err));
 
 app.use(express.json());
 
@@ -12,6 +14,7 @@ app.use("/tasks", tasksRouter);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {
+    console.log("Fallback activated")
     res.status(404).json({ error: "Not Found" });
 });
 
