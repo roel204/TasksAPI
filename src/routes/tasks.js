@@ -45,7 +45,7 @@ router.get("/", async (req, res) => {
         // Add the items to the halResponse
         halResponse.items = tasks.slice(start - 1, start - 1 + limit).map(task => ({
             id: task.id,
-            title: task.name,
+            name: task.name,
             status: task.status,
             _links: {
                 self: {href: `/tasks/${task.id}`},
