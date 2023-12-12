@@ -51,8 +51,8 @@ router.get("/", async (req, res) => {
             name: task.name,
             status: task.status,
             _links: {
-                self: {href: `/tasks/${task.id}`},
-                collection: {href: "/tasks"},
+                self: {href: `http://145.24.222.190:8000/tasks/${task.id}`},
+                collection: {href: "http://145.24.222.190:8000/tasks"},
             },
         }));
         console.log("halResponse done")
@@ -126,22 +126,23 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-    console.log("Start /id/Delete")
+    console.log("Start /id/Delete");
     const id = req.params.id;
 
     try {
         const deletedTask = await Task.findByIdAndDelete(id);
 
         if (!deletedTask) {
-            res.status(404).json({error: "Task not found"});
+            res.status(404).json({ error: "Task not found" });
             return;
         }
 
-        res.json({message: "Task deleted successfully", deletedTask});
+        res.status(204).end();
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 });
+
 
 router.options("/:id", (req, res) => {
     console.log("Start /id/options")
