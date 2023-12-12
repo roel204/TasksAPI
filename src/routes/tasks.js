@@ -85,20 +85,29 @@ router.options("/", (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    console.log("Start /id/Get")
+    console.log("Start /id/Get");
     const id = req.params.id;
 
     try {
-        const task = await Task.findById(id);
+        const task = await Task.findById(id).lean();
 
         if (!task) {
-            res.status(404).json({error: "Task not found"});
+            res.status(404).json({ error: "Task not found" });
             return;
         }
 
-        res.json(task);
+        const links = {
+            self: { href: `http://145.24.222.190:8000/tasks/${id}` },
+            collection: { href: "http://145.24.222.190:8000/tasks" },
+        };
+
+        res.json({
+            ...task,
+            _links: links,
+        });
+
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 });
 
@@ -142,7 +151,6 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 router.options("/:id", (req, res) => {
     console.log("Start /id/options")
