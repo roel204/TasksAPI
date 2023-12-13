@@ -57,7 +57,10 @@ router.get("/", async (req, res) => {
         }));
         console.log("halResponse done")
 
-        // Send the halResponse
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
         res.json(halResponse);
     } catch (error) {
         res.status(500).json({error: error.message});
@@ -81,6 +84,7 @@ router.post("/", async (req, res) => {
 router.options("/", (req, res) => {
     console.log("Start /Options")
     res.header("Allow", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.status(200).send();
 });
 
@@ -90,6 +94,10 @@ router.get("/:id", async (req, res) => {
 
     try {
         const task = await Task.findById(id).lean();
+
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
 
         if (!task) {
             res.status(404).json({ error: "Task not found" });
@@ -155,6 +163,7 @@ router.delete("/:id", async (req, res) => {
 router.options("/:id", (req, res) => {
     console.log("Start /id/options")
     res.header("Allow", "GET, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
     res.status(200).send();
 });
 
