@@ -8,7 +8,6 @@ router.use(express.urlencoded({extended: true}));
 
 // Middleware to check the Accept header for all GET requests
 const checkAcceptHeader = (req, res, next) => {
-    console.log("Start checkAcceptHeader")
     if (req.method === 'GET' && (!req.headers.accept || req.headers.accept !== 'application/json')) {
         // Respond with 406 Not Acceptable if the Accept header is missing or not application/json
         return res.status(406).json({error: "Only application/json is allowed in the Accept header for GET requests"});
@@ -21,7 +20,6 @@ router.use(checkAcceptHeader);
 
 // Middleware to check the Content-Type header for all POST requests
 const checkContentTypeHeader = (req, res, next) => {
-    console.log("Start checkContentTypeHeader")
     if (req.method === 'POST' && (!req.headers['content-type'] ||
         !['application/json', 'application/x-www-form-urlencoded'].includes(req.headers['content-type']))) {
         // Respond with 415 Unsupported Media Type if the Content-Type header is missing or not allowed
@@ -75,6 +73,11 @@ router.post("/", async (req, res) => {
     try {
         const newTask = new Task({name, description, status});
         const savedTask = await newTask.save();
+
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
         res.status(201).json(savedTask);
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -84,6 +87,8 @@ router.post("/", async (req, res) => {
 router.options("/", (req, res) => {
     console.log("Start /Options")
     res.header("Allow", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.status(200).send();
 });
@@ -136,6 +141,10 @@ router.put("/:id", async (req, res) => {
             return;
         }
 
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
+
         res.json(updatedTask);
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -154,6 +163,10 @@ router.delete("/:id", async (req, res) => {
             return;
         }
 
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
+
         res.status(204).end();
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -164,6 +177,8 @@ router.options("/:id", (req, res) => {
     console.log("Start /id/options")
     res.header("Allow", "GET, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.status(200).send();
 });
 
