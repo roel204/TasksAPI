@@ -75,7 +75,7 @@ const getNextQueryString = (total, start, limit) => {
 // };
 
 // Create pagination object
-export const createPagination = (total, start, limit) => {
+export const createPagination = (total, start, limit, host) => {
     console.log("Start createPagination")
     const currentPageNum = currentPage(total, start, limit);
 
@@ -83,7 +83,7 @@ export const createPagination = (total, start, limit) => {
         items: [],
         _links: {
             self: {
-                href: `http://145.24.222.190:8000/tasks`,
+                href: `http://${host}/tasks`,
             },
         },
         pagination: {
@@ -94,19 +94,19 @@ export const createPagination = (total, start, limit) => {
             _links: {
                 first: {
                     page: 1,
-                    href: `http://145.24.222.190:8000/tasks${getFirstQueryString(total, start, limit)}`,
+                    href: `http://${host}/tasks${getFirstQueryString(total, start, limit)}`,
                 },
                 last: {
                     page: numberOfPages(total, start, limit),
-                    href: `http://145.24.222.190:8000/tasks${getLastQueryString(total, start, limit)}`,
+                    href: `http://${host}/tasks${getLastQueryString(total, start, limit)}`,
                 },
                 previous: {
                     page: currentPageNum > 1 ? currentPageNum - 1 : 1,
-                    href: `http://145.24.222.190:8000/tasks${getPreviousQueryString(total, start, limit)}`,
+                    href: `http://${host}/tasks${getPreviousQueryString(total, start, limit)}`,
                 },
                 next: {
                     page: currentPageNum < numberOfPages(total, start, limit) ? currentPageNum + 1 : currentPageNum,
-                    href: `http://145.24.222.190:8000/tasks${getNextQueryString(total, start, limit)}`,
+                    href: `http://${host}/tasks${getNextQueryString(total, start, limit)}`,
                 },
             },
         },

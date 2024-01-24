@@ -40,8 +40,10 @@ router.get("/", async (req, res) => {
         const limit = parseInt(req.query.limit) || tasks.length;
         const total = tasks.length;
 
+        const host = req.get('host');
+
         // Use the createPagination function
-        const halResponse = createPagination(total, start, limit);
+        const halResponse = createPagination(total, start, limit, host);
         console.log("Pagination received")
         // Add the items to the halResponse
         halResponse.items = tasks.slice(start - 1, start - 1 + limit).map(task => ({
@@ -50,8 +52,8 @@ router.get("/", async (req, res) => {
             status: task.status,
             bookmark: task.bookmark,
             _links: {
-                self: {href: `http://145.24.222.190:8000/tasks/${task.id}`},
-                collection: {href: "http://145.24.222.190:8000/tasks"},
+                self: {href: `http://${host}/tasks/${task.id}`},
+                collection: {href: `http://${host}/tasks`},
             },
         }));
         console.log("halResponse done")
@@ -97,6 +99,7 @@ router.options("/", (req, res) => {
 router.get("/:id", async (req, res) => {
     console.log("Start /id/Get");
     const id = req.params.id;
+    const host = req.get('host');
 
     try {
         const task = await Task.findById(id).lean();
@@ -111,8 +114,8 @@ router.get("/:id", async (req, res) => {
         }
 
         const links = {
-            self: { href: `http://145.24.222.190:8000/tasks/${id}` },
-            collection: { href: "http://145.24.222.190:8000/tasks" },
+            self: { href: `http://${host}/tasks/${id}` },
+            collection: { href: `http://${host}/tasks` },
         };
 
         res.json({
