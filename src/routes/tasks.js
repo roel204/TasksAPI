@@ -36,6 +36,9 @@ router.get("/", async (req, res) => {
     try {
         const tasks = await Task.find();
 
+        // Sort tasks to have bookmarked items on top
+        tasks.sort((a, b) => (b.bookmark ? 1 : -1) - (a.bookmark ? 1 : -1));
+
         const start = parseInt(req.query.start) || 1;
         const limit = parseInt(req.query.limit) || tasks.length;
         const total = tasks.length;
