@@ -48,6 +48,7 @@ router.get("/", async (req, res) => {
             id: task.id,
             name: task.name,
             status: task.status,
+            bookmark: task.bookmark,
             _links: {
                 self: {href: `http://145.24.222.190:8000/tasks/${task.id}`},
                 collection: {href: "http://145.24.222.190:8000/tasks"},
@@ -177,6 +178,44 @@ router.options("/:id", (req, res) => {
     console.log("Start /id/options")
     res.header("Allow", "GET, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Methods", "GET, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.status(200).send();
+});
+
+router.patch("/:id/bookmark", async (req, res) => {
+    console.log("Start /id/bookmark Patch");
+    const id = req.params.id;
+
+    try {
+        // Find the task by ID
+        const task = await Task.findById(id);
+
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+
+        // Toggle the bookmark state
+        task.bookmark = !task.bookmark;
+
+        // Save the updated task
+        const updatedTask = await task.save();
+
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        res.header("Access-Control-Allow-Methods", "PATCH, OPTIONS");
+
+        res.json(updatedTask);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.options("/:id/bookmark", (req, res) => {
+    console.log("Start /id/bookmark/options");
+    res.header("Allow", "PATCH, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "PATCH, OPTIONS");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.status(200).send();
